@@ -1,10 +1,13 @@
 <div class="col">
-    <div class="card">
-        <img src="<%= site.img %>" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title"><%= site.name %></h5>
-            <p class="card-text"><%= site.text %></p>
-            <a href="/site_state" class="btn btn-primary">Перейти</a>
+    <form method="GET" action="/site_state">
+        <div class="card">
+            <img src="<%= site.img %>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title"><%= site.name %></h5>
+                <p class="card-text"><%= site.text %></p>
+                <input type="submit" class="btn btn-primary" value="Перейти">
+                <input type="hidden" name="site-link" value="<%= site.link %>">
+            </div>
         </div>
-    </div>
+    </form>
 </div>
