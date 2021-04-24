@@ -1,1 +1,1 @@
-"# sber_content_screen_testing" 
+# SBER Content screener
