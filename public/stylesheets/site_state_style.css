@@ -1,0 +1,41 @@
+.frames {
+    display: flex;
+    justify-content: space-around;
+}
+
+.frame {
+    height: 100%;
+    width: 100%;
+}
+
+
+.legend-block{
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+}
+
+.block{
+    width: 100px;
+    height: 50px;
+}
+
+.red{
+    background-color: red;
+}
+
+.green{
+    background-color: green;
+}
+
+.yellow{
+    background-color: yellow;
+}
+
+.dot{
+    border: dotted black;
+}
+
+.text{
+    margin: 20px;
+}
