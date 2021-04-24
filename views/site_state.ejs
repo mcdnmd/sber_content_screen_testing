@@ -35,8 +35,8 @@
         </div>
         <div class="lol"></div>
         <div class="frames">
-            <iframe class="frame old" name="iframe" id="old-site" ></iframe>
-            <iframe class="frame new" name="iframe" id="new-site" ></iframe>
+            <iframe class="frame old" src="" name="iframe" id="old-site" ></iframe>
+            <iframe class="frame new" sandbox="allow-same-origin" name="iframe" id="new-site" ></iframe>
         </div>
     </div>
 
@@ -129,6 +129,7 @@
         function getDifferences(node1, node2, differences){
             if (!node1 || !node2)
                 return null;
+
             let contentChanges = compareContentNodes(node1, node2);
             let childChanges = compareNodeChilds(node1, node2);
             let pairsToCompare = childChanges['pairsToCompare'];
@@ -145,13 +146,17 @@
                 getDifferences(pair[0], pair[1], differences);
         }
 
-        function comparePages(html1DOM, html2DOM){
+        function comparePages(html1, html2){
             let result = [];
-            // let html1DOM = getDOMObject(html1);
-            // let html2DOM = getDOMObject(html2);
+            let html1DOM = html1;
+            let html2DOM = html2;
             getDifferences(html1DOM.body, html2DOM.body, result);
 
             return result;
+        }
+
+        function changeRelativePathsToAbsolute(dom){
+            let head = dom.head;
         }
 
         window.onload = function() {
@@ -175,11 +180,6 @@
                     let html1 = xhr.response;
                     let html2 = xhr2.response;
 
-                    // var iframe = document.createElement('iframe');
-                    // iframe.srcdoc = html1;
-                    // iframe.src = "data:text/html;charset=utf-8," + escape(html1);
-                    // console.log(iframe);
-                    // document.querySelector('.frames').appendChild(iframe);
                     let ifr1 = document.querySelector('#old-site').contentDocument;
                     ifr1.open('text/html', 'replace');
                     ifr1.write(new XMLSerializer().serializeToString(getDOMObject(html1)));
@@ -187,33 +187,39 @@
 
                     let ifr2 = document.querySelector('#new-site').contentDocument;
                     ifr2.open('text/html', 'replace');
-                    ifr2.write(html2);
+                    ifr2.write(new XMLSerializer().serializeToString(getDOMObject(html2)));
                     ifr2.close();
 
-                    let changes = comparePages(ifr1, ifr2);
-
-                    for (const change of changes){
-                        if ('newElems' in change){
-                            for (const newElem of change['newElems']){
-                                let elem = null;
-                                if (newElem[0])
-                                    newElem[0].style.backgroundColor = 'red';
-                                if (newElem[1])
-                                    newElem[1].style.backgroundColor = '#90EE90';
-                            }
-                        }
-
-                        if ('textContent' in change){
-                            change['nodes'][0].style.backgroundColor = 'yellow';
-                            change['nodes'][1].style.backgroundColor = 'yellow';
-                        }
-
-                        if ('styles' in change){
-                            change['nodes'][0].style.border = '2px dotted gray';
-                            change['nodes'][1].style.border = '2px dotted gray';
-                        }
-
+                    ifr1.onerror = function(){
+                        console.log(ifr1.body);
                     }
+                    // Костыль ожидания загрузки страницы
+                    setTimeout(() => {
+                        let changes = comparePages(ifr1, ifr2);
+                        for (const change of changes){
+                            if ('newElems' in change){
+                                for (const newElem of change['newElems']){
+                                    let elem = null;
+                                    if (newElem[0])
+                                        newElem[0].style.backgroundColor = 'red';
+                                    if (newElem[1])
+                                        newElem[1].style.backgroundColor = '#90EE90';
+                                }
+                            }
+
+                            if ('textContent' in change){
+                                change['nodes'][0].style.backgroundColor = 'yellow';
+                                change['nodes'][1].style.backgroundColor = 'yellow';
+                            }
+
+                            if ('styles' in change){
+                                change['nodes'][0].style.border = '2px dotted gray';
+                                change['nodes'][1].style.border = '2px dotted gray';
+                            }
+
+                        }
+                    }, 1000);
+                    
                 };
 
                 xhr2.send();
