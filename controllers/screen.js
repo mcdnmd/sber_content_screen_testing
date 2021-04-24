@@ -1,13 +1,14 @@
 const Site = require('../models/Site');
 const keys = require('../config/keys');
+const fetch = require("node-fetch");
 
-module.exports.getsites = async (req, res) => {
-    let candidate = await Site.findOne({url: req.body.url});
-    if (candidate){
-        res.status(200).json(candidate);
-    } else {
-        res.status(404).json({
-            message: 'Такой url отсутсвует.'
+module.exports.getSiteContent = async (req, res) => {
+    fetch(req.body.url)
+        .then(response => response.text())
+        .then(data  => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', '*');
+            res.send(data);
         });
-    }
-};
+}
+       

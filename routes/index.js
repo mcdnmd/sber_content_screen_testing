@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/sites', controller.getCards);
 
+
 router.get('/site_state', function(req, res, next) {
   res.render('site_state', {
     title: 'Библиотека',

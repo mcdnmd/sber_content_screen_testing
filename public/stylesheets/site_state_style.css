@@ -1,11 +1,23 @@
+body,html {
+    height: 100%;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+}
+
+
 .frames {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    min-height: 100%;
 }
 
 .frame {
-    height: 100%;
-    width: 100%;
+    position:relative;
+    border:0;
+    height:100%;
+    width:80%;
+    min-height: 100vh;
 }
 
 

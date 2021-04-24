@@ -3,24 +3,23 @@ const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
+const fetch = require("node-fetch");
 
 // Важные переменные
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const screenRouter = require('./routes/screen');
-// TODO Не забудь подключть
-//const keys = require('./config/keys');
+
+const keys = require('./config/keys');
 
 // Запуск Express
 const app = express();
 
 // Инициализация базы данных
-// TODO Не забудь подключть
-/*
 mongoose.connect(keys.mongoURI)
     .then(() => console.log('MongoDB connected.'))
     .catch( error => console.log(error));
-*/
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

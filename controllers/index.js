@@ -19,7 +19,7 @@ module.exports.getCards = async (req, res) => {
             'name': 'ya.ru',
             'text': 'Ну мы второй курс на стажировки не берем',
             'img': 'https://im0-tub-ru.yandex.net/i?id=b34ca6de9776827a3612dc47015388d8&n=13',
-            'link': 'https://skb.kontur.ru'
+            'link': 'https://kontur.ru'
         }]
     res.render('sites', { title: 'Библиотека', active: 'sites', sites: candidate})
 };

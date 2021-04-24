@@ -25,11 +25,33 @@
             <div class="block dot"></div>
             <div class="text"> - стиль был изменён</div>
         </div>
+        <div class="lol"></div>
         <div class="frames">
             <iframe class="frame old" name="iframe" id="old-site"  ></iframe>
             <iframe class="frame new" name="iframe" id="new-site" ></iframe>
         </div>
     </div>
+
+    <!-- Скрипт подтягивает инфу с сайта -->
+    <script defer>
+        let link = new URL(window.location.href).searchParams.get("site-link");
+        let data = JSON.stringify({
+            "url": link
+        });
+        let xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function() {
+            if(this.readyState === 4) {
+                let container = document.querySelector('.lol');
+                let newParagraph = document.createElement('p');
+                newParagraph.innerText = this.responseText;
+                container.appendChild(newParagraph);
+            }
+        });
+        xhr.open("POST", '/api/screen/getsite');
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+    </script>
 
     <script defer>
         window.onload = function() {
