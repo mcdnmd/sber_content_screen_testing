@@ -1,6 +1,7 @@
 const express = require('express');
+const passport = require('passport');
+const controller = require('../controllers/index');
 const router = express.Router();
-const controller = require('../controllers/index')
 
 
 router.get('/', function(req, res, next) {
