@@ -4,24 +4,25 @@ const express = require('express');
 const path = require('path');
 const passport = require('passport')
 const logger = require('morgan');
+//const fetch = require("node-fetch");
 
 // Важные переменные
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const screenRouter = require('./routes/screen');
 
-const keys = require('./config/keys');
+//const keys = require('./config/keys');
 
 // Запуск Express
 const app = express();
 
 // Инициализация базы данных
-mongoose.connect(keys.mongoURI)
-    .then(() => console.log('MongoDB connected.'))
-    .catch( error => console.log(error));
+// mongoose.connect(keys.mongoURI)
+//     .then(() => console.log('MongoDB connected.'))
+//     .catch( error => console.log(error));
 
-app.use(passport.initialize());
-require('./middleware/passport')(passport);
+//app.use(passport.initialize());
+//require('./middleware/passport')(passport);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
