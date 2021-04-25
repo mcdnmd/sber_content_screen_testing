@@ -1,6 +1,7 @@
 const Site = require('../models/Site');
 
 module.exports.getCards = async (req, res) => {
+    
     //const candidate = await Site.findOne({});
     let candidate = [
         {

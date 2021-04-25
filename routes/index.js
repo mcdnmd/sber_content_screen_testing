@@ -2,16 +2,17 @@ const express = require('express');
 const passport = require('passport');
 const controller = require('../controllers/index');
 const router = express.Router();
+const fetch = require("node-fetch");
 
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Главная', active: 'main' });
 });
 
-router.get('/sites', controller.getCards);
+router.get('/sites', passport.authenticate('jwt', {session: false}), controller.getCards);
 
 
-router.get('/site_state', function(req, res, next) {
+router.get('/site_state', passport.authenticate('jwt', {session: false}), function(req, res, next) {
   res.render('site_state', {
     title: 'Библиотека',
     active: 'site state',

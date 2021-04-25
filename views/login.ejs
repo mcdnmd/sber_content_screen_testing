@@ -8,7 +8,6 @@
 <%- include('./partials/navbar'); %>
 <div class="container">
     <h1><%= title %></h1>
-    <form class="form-horizontal" action='' method="POST">
         <fieldset>
             <div class="control-group">
                 <!-- E-mail -->
@@ -31,14 +30,32 @@
             <div class="control-group">
                 <!-- Button -->
                 <div class="controls">
-                    <button class="btn btn-success" onclick="">Login</button>
+                    <button class="btn btn-success" onclick="loginOnClick()">Login</button>
                 </div>
             </div>
         </fieldset>
-    </form>
 
-    <script src="/javascripts/login.js">
-        loginSubmit();
+    <script>
+        function loginOnClick(key, value) {
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let data = JSON.stringify({
+                "email": email,
+                "password": password
+            });
+            let xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.open("POST", '/api/auth/login', true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload  = function() {
+                let json = JSON.parse(xhr.response);
+                if (json.token) {
+                    document.cookie = `jwt:${json.token}; Path=/;`
+                }
+            };
+            xhr.send(data);
+        }
     </script>
 </div>
 </body>
