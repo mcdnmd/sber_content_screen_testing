@@ -51,7 +51,7 @@
             xhr.onload  = function() {
                 let json = JSON.parse(xhr.response);
                 if (json.token) {
-                    document.cookie = `jwt:${json.token}; Path=/;`
+                    document.cookie = `jwt=${json.token}; Path=/;`
                 }
             };
             xhr.send(data);
