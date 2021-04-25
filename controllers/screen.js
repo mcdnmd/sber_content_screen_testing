@@ -1,5 +1,5 @@
 const Site = require('../models/Site');
-const keys = require('../config/keys');
+//const keys = require('../config/keys');
 const fetch = require("node-fetch");
 
 module.exports.getSiteContent = async (req, res) => {

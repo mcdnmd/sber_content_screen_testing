@@ -20,6 +20,7 @@ let cookieExtractor = function(req) {
 };
 
 const options = {};
+
 options.jwtFromRequest = cookieExtractor;
 options.secretOrKey = keys.jwt;
 

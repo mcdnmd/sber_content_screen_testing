@@ -4,9 +4,8 @@
     <title>Самое важное</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link href="/stylesheets/site_state_style.css" rel="stylesheet">
-
     <style>
-        body, 
+        body,
         html {
             overflow: auto;
             height: auto;
@@ -35,130 +34,136 @@
         </div>
         <div class="lol"></div>
         <div class="frames">
-            <iframe class="frame old" src="" name="iframe" id="old-site" ></iframe>
+            <iframe class="frame old" sandbox="allow-same-origin" name="iframe" id="old-site" ></iframe>
             <iframe class="frame new" sandbox="allow-same-origin" name="iframe" id="new-site" ></iframe>
         </div>
     </div>
 
     <!-- Скрипт подтягивает инфу с сайта -->
-
     <script defer>
         function getTextFromNode(node){
             if (!node
                 || !node.childNodes[0]
                 || node.childNodes[0].nodeName !== "#text")
                 return "";
-            return node.childNodes[0].nodeValue;
+            return node.childNodes[0].nodeValue.trim();
         }
-
         function compareContentNodes(node1, node2){
             let changes = {
                 "nodes": [node1, node2]
             };
             BLACKLIST_PROPERTIES = ['__proto__'];
-
             let node1Text = getTextFromNode(node1);
             let node2Text = getTextFromNode(node2);
             // Text content
-            if (node1Text != node2Text)
+            if (node1Text !== node2Text)
                 changes['textContent'] = [node1Text, node2Text];
-
             // Styles
             for (const key of Object.keys(node1.style)){
                 if (key in BLACKLIST_PROPERTIES)
                     continue;
-
-                if (node1.style[key] != node2.style[key]){
+                if (node1.style[key] !== node2.style[key]){
                     if (!('styles' in changes))
                         changes['styles'] = [{}, {}];
                     changes['styles'][0][key] = node1.style[key];
                     changes['styles'][1][key] = node2.style[key];
                 }
             }
-
             return changes;
         }
-
         function isMatchingPair(node1, node2){
             return node1.tagName === node2.tagName;
         }
-
         function compareNodeChilds(node1, node2){
             let pairsMatchedOfNode2 = new Set();
             let pairsToCompare = [];
             let changes = {"newElements": []};
-
             for(const childNode1 of node1.children){
                 let matchingPair = null;
-
                 for(const childNode2 of node2.children){
                     if (childNode2 in pairsMatchedOfNode2)
                         continue;
-
                     if (isMatchingPair(childNode1, childNode2)){
                         matchingPair = childNode2;
                         pairsMatchedOfNode2.add(childNode2);
                         break;
                     }
                 }
-
                 if (matchingPair){
                     pairsToCompare.push([childNode1, matchingPair]);
                 } else {
                     changes["newElements"].push([childNode1, null]);
                 }
             }
-
             for (const childNode2 of node2.children){
                 if (pairsMatchedOfNode2.has(childNode2))
                     continue;
                 changes["newElements"].push([null, childNode2]);
             }
-
             return {
                 "pairsToCompare": pairsToCompare,
                 "newElements": changes["newElements"]
             };
         }
-
         function getDOMObject(htmlContent){
             let parser = new DOMParser();
             return parser.parseFromString(htmlContent, "text/html");
         }
-
         function getDifferences(node1, node2, differences){
             if (!node1 || !node2)
                 return null;
-
             let contentChanges = compareContentNodes(node1, node2);
             let childChanges = compareNodeChilds(node1, node2);
             let pairsToCompare = childChanges['pairsToCompare'];
             let newElems = childChanges['newElements'];
-
             if (Object.keys(contentChanges).length > 1){
                 differences.push(contentChanges);
             }
-
             if (newElems.length > 0)
                 differences.push({'newElems': newElems});
-
             for(const pair of pairsToCompare)
                 getDifferences(pair[0], pair[1], differences);
         }
-
         function comparePages(html1, html2){
             let result = [];
             let html1DOM = html1;
             let html2DOM = html2;
             getDifferences(html1DOM.body, html2DOM.body, result);
-
             return result;
         }
-
         function changeRelativePathsToAbsolute(dom){
             let head = dom.head;
         }
-
+        // function getContent(html1, html2) {
+        //     let imagesFirst = html1.getElementsByTagName('img');
+        //     let imagesSecond = html2.getElementsByTagName('img');
+        //     for (let image1 of imagesFirst) {
+        //         let source1 = image1.getAttribute('src');
+        //         let count = 0;
+        //         for (let image2 of imagesSecond) {
+        //             let source2 = image2.getAttribute('src');
+        //             if (source1 !== source2) {
+        //                 count++;
+        //             }
+        //         }
+        //         if (count === imagesSecond.length) {
+        //             //addBackgroundColorRed
+        //         }
+        //     }
+        //     for (let image2 of imagesSecond) {
+        //         let source2 = image2.getAttribute('src');
+        //         for (let image1 of imagesFirst) {
+        //             let count = 0;
+        //             let source1 = image1.getAttribute('src');
+        //             if (source2 === source1) {
+        //                 count++;
+        //             }
+        //         }
+        //         if(count === 0){
+        //             //addBackgroundColorGreen;
+        //         }
+        //     }
+        // }
         window.onload = function() {
             let link = new URL(window.location.href).searchParams.get("site-link");
             let data = JSON.stringify({
@@ -166,30 +171,24 @@
             });
             let xhr = new XMLHttpRequest();
             xhr.withCredentials = true;
-
             //Запрос в файл для получения содержимого страницы
             xhr.open("POST", '/api/screen/getsite');
             xhr.setRequestHeader("Content-Type", "application/json");
-
             xhr.onload = function() {
                 // Запрос в базу данных
                 let xhr2 = new XMLHttpRequest();
                 xhr2.open("GET", "/test_site/test_site_change");
-
                 xhr2.onload = function(){
                     let html1 = xhr.response;
                     let html2 = xhr2.response;
-
                     let ifr1 = document.querySelector('#old-site').contentDocument;
                     ifr1.open('text/html', 'replace');
                     ifr1.write(new XMLSerializer().serializeToString(getDOMObject(html1)));
                     ifr1.close();
-
                     let ifr2 = document.querySelector('#new-site').contentDocument;
                     ifr2.open('text/html', 'replace');
                     ifr2.write(new XMLSerializer().serializeToString(getDOMObject(html2)));
                     ifr2.close();
-
                     ifr1.onerror = function(){
                         console.log(ifr1.body);
                     }
@@ -206,25 +205,20 @@
                                         newElem[1].style.backgroundColor = '#90EE90';
                                 }
                             }
-
                             if ('textContent' in change){
                                 change['nodes'][0].style.backgroundColor = 'yellow';
                                 change['nodes'][1].style.backgroundColor = 'yellow';
                             }
-
                             if ('styles' in change){
                                 change['nodes'][0].style.border = '2px dotted gray';
                                 change['nodes'][1].style.border = '2px dotted gray';
                             }
-
                         }
                     }, 1000);
-                    
-                };
 
+                };
                 xhr2.send();
             };
-
             xhr.send(data);
         };
     </script>

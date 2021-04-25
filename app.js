@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const passport = require('passport')
 const logger = require('morgan');
+//const fetch = require("node-fetch");
 
 // Важные переменные
 const indexRouter = require('./routes/index');
@@ -17,8 +18,8 @@ const app = express();
 
 // Инициализация базы данных
 mongoose.connect(keys.mongoURI)
-    .then(() => console.log('MongoDB connected.'))
-    .catch( error => console.log(error));
+     .then(() => console.log('MongoDB connected.'))
+     .catch( error => console.log(error));
 
 app.use(passport.initialize());
 require('./middleware/passport')(passport);
