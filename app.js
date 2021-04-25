@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
-const fetch = require("node-fetch");
 
 // Важные переменные
 const indexRouter = require('./routes/index');

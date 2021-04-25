@@ -19,7 +19,11 @@ router.get('/site_state', function(req, res, next) {
 });
 
 router.get('/login', function (req, res, next){
-  res.render('login', { title: 'Авторизация', active: 'main'});
+  res.render('login', { title: 'Авторизация', active: 'login'});
+});
+
+router.get('/signup', function (req, res, next){
+  res.render('signup', { title: 'Регистрация', active: 'signup'});
 });
 
 router.get('/test_site/test_site', function(req, res, next) {
