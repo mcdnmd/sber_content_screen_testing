@@ -9,15 +9,15 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const screenRouter = require('./routes/screen');
 
-const keys = require('./config/keys');
+//const keys = require('./config/keys');
 
 // Запуск Express
 const app = express();
 
 // Инициализация базы данных
-mongoose.connect(keys.mongoURI)
-    .then(() => console.log('MongoDB connected.'))
-    .catch( error => console.log(error));
+// mongoose.connect(keys.mongoURI)
+//     .then(() => console.log('MongoDB connected.'))
+//     .catch( error => console.log(error));
 
 
 app.set('views', path.join(__dirname, 'views'));
